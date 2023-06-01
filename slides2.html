@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Night Owl Theme with Remark.js</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.2/dist/reveal.min.css" />
+    <style>
+      /* Night Owl theme */
+      .reveal {
+        background-color: #011627;
+        color: #D6DEEB;
+      }
+
+      .reveal h1,
+      .reveal h2,
+      .reveal h3,
+      .reveal h4,
+      .reveal h5,
+      .reveal h6 {
+        color: #82AAFF;
+      }
+
+      .reveal a {
+        color: #82AAFF;
+      }
+
+      .reveal pre code {
+        color: #D6DEEB;
+        background-color: #1F4662;
+      }
+
+      .reveal code {
+        color: #D6DEEB;
+        background-color: #1F4662;
+        font-family: 'Courier New', Courier, monospace;
+      }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+      <!-- Slide 1 -->
+      # Slide 1
+      This is the first slide using Night Owl theme.
+      
+      ---
+
+      <!-- Slide 2 -->
+      # Slide 2
+      This is the second slide with some code highlighting:
+
+      ```
+      // Code block example
+      function helloWorld() {
+        console.log("Hello, world!");
+      }
+      ```
+
+      ---
+
+      <!-- Slide 3 -->
+      # Slide 3
+      This is the third slide.
+
+      ---
+
+      <!-- Add more slides as needed -->
+    </textarea>
+
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>

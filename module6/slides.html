@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Introducción a Data Acquisition con Power BI</title>
+    <meta charset="utf-8">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;700&display=swap');
+
+        body {
+        font-family: 'Open Sans', sans-serif;
+        padding: 20px;
+        }
+
+        h1, h2, h3, h4 {
+        font-family: "Rubik", sans-serif;
+        }
+
+        h1 {
+        color: #07C;
+        }
+
+        h2 {
+        color: #F04E98;
+        }
+
+        h3 {
+        color: #00BFB3;
+        }
+
+        h4 {
+        color: #FEC514;
+
+        }
+
+
+        .remark-slide-content {
+          max-width: 1080px;
+          margin: 0 auto;
+          background-color: #fff;
+          /* background-image: url('img/bg3.jpg'); */
+          background-size: cover;
+          background-position: right;
+          padding: 20px;
+          border-radius: 0px;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        img {
+          display: block;
+          margin: 0 auto;
+          max-width: 80%;
+          height: auto;
+        }
+        
+        .remark-code, .remark-inline-code {
+        font-family: 'Ubuntu Mono', monospace;
+        color: #F8F8F2;
+        background-color: #272822;
+        padding: 2px 4px;
+        border-radius: 4px;
+        }
+
+      </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# Module 6: The One About Shards
+### Dragonfly Team 2023
+
+---
+class: center, middle
+
+# Understanding Shards
+
+**Shards** are individual units of data distribution and scalability, representing subsets of an index that enable parallel processing and efficient handling of large datasets across a cluster of nodes.
+
+
+
+---
+# Understanding Shards
+Shards play a crucial role in Elasticsearch for the following reasons:
+
+1. **Scalability**: Shards allow you to distribute your data across multiple nodes in a cluster, enabling horizontal scaling and accommodating larger datasets.
+
+2. **Parallel Processing**: With multiple shards, Elasticsearch can process search and indexing requests in parallel, leading to improved performance and faster response times.
+
+3. **Fault Tolerance**: By creating replica shards, Elasticsearch provides redundancy and fault tolerance. If a node fails, the replicas can take over, ensuring high availability and data durability.
+
+4. **Load Balancing**: Shards help evenly distribute the workload across nodes, preventing any single node from becoming a bottleneck and enabling efficient resource utilization.
+
+5. **Flexibility**: Configurable shard count adapts to changing cluster requirements.
+---
+
+# Scaling ElasticSearch
+
+---
+
+# Distruted operations
+
+
+
+    </textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
