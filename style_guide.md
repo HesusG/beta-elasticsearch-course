@@ -1,6 +1,10 @@
- //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-||           DRAGONFLY CODE STYLE        ||
- \\////////////////////////////////
+        //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+        ||                      DRAGONFLY CODE STYLE                     ||
+        \\///////////////////////////////////////////////////////////////
+
+                                       (\"/)                                        (/|\)
+                                         |
+                                         |
 
 # Table of Contents
 
@@ -9,12 +13,6 @@
 - [Imports](#imports)
 - [Comments and Documentation](#comments-and-documentation)
 - [Function and Method Definitions](#function-and-method-definitions)
-- [Conditional Statements and Loops](#conditional-statements-and-loops)
-- [Error Handling](#error-handling)
-- [Code Organization](#code-organization)
-- [Tooling](#tooling)
-- [Code Smells](#code-smells)
-- [Testing](#testing)
 
 ## Indentation and Formatting
 
@@ -326,49 +324,4 @@ Approved variable styles:
             es.complex_logic()
 
     ```
-### Code Comments and Documentatoin
-- **Function Documentation (Docstring):**
-  - Use docstrings to provide documentation for functions.
-  - Place the docstring as the first statement inside the function.
-  - Use triple double-quotes for multi-line docstrings.
-  - Describe the purpose of the function, its arguments, and return value.
 
-  Example:
-    ```python
-    def calculate_area(radius: float) -> float:
-        """
-        Calculate the area of a circle given its radius.
-        """
-        area = 3.14159 * radius ** 2
-        return area
-    ```
-- **Commenting Complex Logic:**    
-  - Avoid `TODO` comments
-  - Comment before the code you regef to, not after it.
-  - Never comment codeblocls with the intention of preserving or storing this code, unusedcode shoulde be eliminated.
-  - Comments should be written in English.
-
-
-
-
-### Imports
-- Imports should be on separate lines: 
-```python
-# Correct:
-import os
-import sys
-# Wrong:
-import sys, os
-```
-- Imports are always put at the top of the file, just after any module comments and docstrings, and before module globals and constants.
-- Imports should be grouped in the following order:
-- Standard library imports.
-- Related third party imports.
-- Local application/library specific imports.
-
-
-
-
-### Odoo Specifics 
- _id
- _ids
