@@ -187,8 +187,9 @@ window.elasticAnalytics.createTracker({
   apiKey: "your_api_key",
 });
 </script>
-
+```
 ---
+
 # Capabilities of Browser Tracker
 
 Elastic's `browser-tracker` package is designed to capture a wide array of user behaviors on websites, including:
@@ -250,7 +251,7 @@ Unlike keyword-based search, vector search understands the context and semantics
 
 * **Specify a Script Score Query:**
    * Craft a query that incorporates the query vector and a filter (optional).
- ---
+---
 
 # Tools and Synergies
 
@@ -261,12 +262,9 @@ Elasticsearch vector search can be enhanced with tools like Kibana for visualiza
 class: center, middle
 
 # Vector Search
-
-*Introduction**
-
-* Traditional search relies on exact keyword matching, which can be limiting.
-* Vector search tackles this challenge by understanding the semantic relationships between data points.
-* This enables searching based on meaning and similarity, not just exact keywords.
+Traditional search relies on exact keyword matching, which can be limiting.
+Vector search tackles this challenge by understanding the semantic relationships between data points.
+This enables searching based on meaning and similarity, not just exact keywords.
 
 ---
 ## Setting Up Approximate k-NN Search
@@ -286,6 +284,7 @@ class: center, middle
      }
    } 
    ```
+---
 * **Perform a k-NN Search Query:**
    * Include the query vector, the desired number of neighbors (k), and an optional filter. 
    ```json
@@ -306,7 +305,7 @@ class: center, middle
      }
    }
    ```
-   --
+---
 
    # Use cases 
    
