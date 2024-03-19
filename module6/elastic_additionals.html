@@ -222,7 +222,35 @@ Vector search is pivotal in AI for tasks like semantic search, recommendation sy
 
 Unlike keyword-based search, vector search understands the context and semantics, offering more accurate and relevant results based on content similarity.
 
+* Traditional search relies on exact keyword matching, which can be limiting.
+* Vector search tackles this challenge by understanding the semantic relationships between data points.
+* This enables searching based on meaning and similarity, not just exact keywords.
+
+
 ---
+
+# Exact vs. Approximate k-NN Search
+
+* **Exact k-NN Search:**
+    * Exhaustively compares the query vector to all vectors in the index.
+    * Guarantees the most accurate results.
+    * Can be computationally expensive for large datasets.
+
+* **Approximate k-NN Search:**
+    * Employs techniques to find the k nearest neighbors efficiently.
+    * Offers a balance between accuracy and speed.
+    * Well-suited for real-time search applications.
+
+---
+
+# Setting Up Exact k-NN Search
+
+* **Create an Index with a Dense Vector Field:**
+   * Define a field to store dense vectors using the `dense_vector` data type.
+
+* **Specify a Script Score Query:**
+   * Craft a query that incorporates the query vector and a filter (optional).
+ ---
 
 # Tools and Synergies
 
@@ -230,8 +258,70 @@ Elasticsearch vector search can be enhanced with tools like Kibana for visualiza
 
 ---
 
-For detailed setup instructions and further exploration of vector search's capabilities within Elasticsearch, refer to the comprehensive guides provided by Elastic and Opster.
+class: center, middle
 
+# Vector Search
+
+*Introduction**
+
+* Traditional search relies on exact keyword matching, which can be limiting.
+* Vector search tackles this challenge by understanding the semantic relationships between data points.
+* This enables searching based on meaning and similarity, not just exact keywords.
+
+---
+## Setting Up Approximate k-NN Search
+
+* **Create an Index with a Dense Vector Field:**
+   * Define a field to store dense vectors, ensuring `index: true` is set.
+   ```json
+   PUT my_images_index
+   {
+     "mappings": {
+       "properties": {
+         "image_vector": { 
+           "type": "dense_vector",
+           "dims": 512 
+         }
+       }
+     }
+   } 
+   ```
+* **Perform a k-NN Search Query:**
+   * Include the query vector, the desired number of neighbors (k), and an optional filter. 
+   ```json
+   GET my_images_index/_search
+   {
+     "query": {
+       "script_score": {
+         "query": {
+           "match_all": {} 
+         },
+         "script": {
+           "source": "cosineSimilarity(params.query_vector, 'image_vector') + 1.0",
+           "params": {
+             "query_vector": [0.12, 0.84, ...]    
+           }
+         }
+       } 
+     }
+   }
+   ```
+   --
+
+   # Use cases 
+   
+   - **Log Analysis**: Search semantically through massive volumes of logs to find related error patterns or anomalies.
+   - **Metrics Similarity**: Group or correlate time-series metrics based on their behavior for anomaly detection.
+   - **Risk Scoring**: Assess the risk profile of users or entities based on the similarity of their behavior with past fraudulent activities.
+   - **Incident Response**: Accelerate investigations by finding semantically related historical incidents.
+   - **Intelligent Ticket Routing**: Route tickets to the most appropriate agents based on the semantic similarity between the new ticket and past resolved cases.
+   - **Solution Search**: Find relevant solutions in a knowledge base, even if the user doesn't use the exact keywords.
+  
+---
+# Enhancing Elasticsearch with ML Vector Models
+
+Elasticsearch's vector search capabilities are further amplified by embedding advanced machine learning vector models. This integration allows for the processing and understanding of complex, unstructured data at scale. By leveraging these models, Elasticsearch can perform deep semantic analysis.
+---
     </textarea>
     <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
     <script>
