@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Introducción a Data Acquisition con Power BI</title>
+    <title>Module 6: The One About Shards</title>
     <meta charset="utf-8">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap');
@@ -38,7 +38,7 @@
           max-width: 1080px;
           margin: 0 auto;
           background-color: #fff;
-          /* background-image: url('img/bg3.jpg'); */
+          background-image: url('img/bg3.jpg'); 
           background-size: cover;
           background-position: right;
           padding: 20px;
@@ -55,8 +55,8 @@
         
         .remark-code, .remark-inline-code {
         font-family: 'Ubuntu Mono', monospace;
-        color: #F8F8F2;
-        background-color: #272822;
+        color: #1d2222;
+        background-color: rgba(0, 0, 0, 0.1) ;
         padding: 2px 4px;
         border-radius: 4px;
         }
@@ -78,8 +78,6 @@ class: center, middle
 
 **Shards** are individual units of data distribution and scalability, representing subsets of an index that enable parallel processing and efficient handling of large datasets across a cluster of nodes.
 
-
-
 ---
 # Understanding Shards
 Shards play a crucial role in Elasticsearch for the following reasons:
@@ -94,14 +92,225 @@ Shards play a crucial role in Elasticsearch for the following reasons:
 
 5. **Flexibility**: Configurable shard count adapts to changing cluster requirements.
 ---
+class: center, middle
 
-# Scaling ElasticSearch
+# Cluster and Nodes
+
+
+In a traditional database system, we usually have only one server serving all the requests. Elasticsearch is a distributed system, meaning it is made up of one or more nodes (servers) that act as a single application, which enables it to scale and handle load beyond what a single server can handle. Each node (server) has part of the data.
 
 ---
+# Cluster and Nodes
+<br><br>
+These three nodes work together to handle all the indexing and query requests on the data. Each cluster is identified by a unique name, which defaults to elasticsearch. It is often common to have multiple clusters, one for each environment, such as staging, pre-production, production. 
+![node](img/node.png)
 
-# Distruted operations
+---
+# Full Cluster Architecture pt1. 
+<br><br>
+![node](img/architecture.png)
+
+---
+# Shard
+
+<br><br><br><br>
+Elasticsearch uses Apache Lucene internally to index and query the data. A shard is nothing but an Apache Lucene instance.
+![node](img/shard.png)
+
+---
+# Primary Shards
+Primary shards are the initial shards into which an index is divided. When you create an index, you specify the number of primary shards that should be allocated to that index. Each primary shard is an independent and fully functional index.
+
+```
+// Configuring the number of primaries
+PUT /your_index_name
+{
+  "settings": {
+    "number_of_shards": 5
+  }
+}
+```
+
+* Default is 1.
+
+---
+# Primary Shards
+![scale](img/primary1.png)
+
+---
+# Primary Shards
+![scale](img/primary2.png)
+
+---
+# Oversharding
+
+Oversharding occurs when an Elasticsearch index has an excessive number of small-sized shards relative to the cluster resources and data volume. It is a common problem that can lead to several issues:
+
+1. **Increased Overhead**: Each shard incurs overhead in terms of memory usage, disk space, and network communication. Having too many shards can significantly impact cluster performance and resource utilization.
+
+2. **Coordination Complexity**: Elasticsearch needs to coordinate operations across all shards of an index, and excessive shards increase the coordination overhead, resulting in slower indexing and search performance.
+
+3. **Inefficient Disk I/O**: With many small shards, Elasticsearch needs to perform more disk I/O operations to retrieve the necessary data, leading to increased latency and reduced throughput.
+
+---
+# Oversharding
+<br> <br>
+4. **Higher Memory Consumption**: Each shard requires memory resources to maintain its data structures. Having numerous shards can consume a significant amount of memory, potentially causing out-of-memory errors.
+
+5. **Network Overhead**: Inter-shard communication increases as the number of shards grows, which can strain the network bandwidth and impact overall cluster performance.
+<br><br><br><br>
+To mitigate oversharding, it's recommended to carefully plan the number of shards based on the data volume, expected workload, and cluster resources.
+
+---
+# Replicas
+<br><br>
+Replicas are additional copies of primary shards that provide redundancy and improve fault tolerance. When you create an index, you can configure the number of replica shards you want to have for that index.
+
+![node](img/replica.png)
+
+---
+# Replicas
+Here are some key benefits  about replicas:
+
+- **Redundancy**: Replicas serve as backups for primary shards, providing data redundancy in case of failures.
+- **High Availability**: Replicas ensure continuous operations without data loss or downtime during shard or node failures.
+- **Read Scalability**: Replicas distribute search and retrieval requests, improving query throughput and read scalability.
+
+---
+# Replicas
 
 
+- **Load Balancing**: Replicas balance workloads across nodes, preventing overload on a single node.
+- **Configuration**: The number of replicas can be defined or modified, enhancing fault tolerance and read scalability. However, it increases disk space requirements and indexing latency.
+<br>
+*it's recommended to conduct performance testing and benchmarking in your specific environment to determine the optimal number of replicas for your use case. Start with a baseline and gradually increase the number of replica
+
+---
+# Replicas
+The use of replica is recommended to avoid data loss. To use the replica, **there must be at least two nodes**. So now, another question arises: How many shards/replicas should we use?
+```
+// Configuring the number of primaries
+PUT /your_index_name
+{
+  settings: {
+    number_of_shards: 2,
+    number_of_replicas: 0
+  }
+}
+```
+
+---
+# Full Cluster Architecture pt2. 
+<br><br>
+![node](img/architecture.png)
+
+---
+# Full Cluster Architecture
+
+- **Master-eligible node**:
+  - Responsible for lightweight cluster-wide operations, such as index management and cluster tracking.
+  - Can be elected as the master node.
+  - Enable or disable this role using the `node.master` setting.
+
+- **Data node**:
+  - Contains indexed documents and handles CRUD, search, and aggregation operations.
+  - By default, the data node role is enabled.
+  - Enable or disable this role using the `node.data` setting.
+
+
+
+---
+# Full Cluster Architecture
+
+
+- **Ingest node**:
+  - Processes documents in a pipeline before indexing them.
+  - By default, the ingest node role is enabled.
+  - Enable or disable this role using the `node.ingest` setting.
+
+- **Coordinating-only node**:
+  - A node with all three roles disabled.
+  - Acts as a coordination node, routing requests, reducing search phases, and distributing work via bulk indexing.
+
+---
+  # Full Cluster Architecture
+An index consists of one or more shards. A shard is a Lucene index that uses a data structure (inverted index) to store data. Each shard can have zero or more replicas. <br><br>
+  ![node](img/architecture2.png)
+  
+---
+class: center, middle
+
+# Scaling Elasticsearch
+### Dragonfly Team 2023
+
+---
+# Scaling
+
+Elasticsearch provides several mechanisms for scaling your cluster to handle increased data volumes, read and write workloads, and to ensure high availability and performance.
+
+![scale](img/scale.png)
+
+---
+# Balancing Shards
+
+- Elasticsearch automatically handles shard allocation and rebalancing to achieve an even distribution of shards across nodes.
+- Even shard distribution prevents hotspots and ensures balanced resource utilization.
+
+![scale](img/overallocation.png)
+
+---
+# Shard Overallocation
+
+Shard overallocation occurs when the number of shards in an Elasticsearch index is too high relative to the amount of data and cluster resources, leading to inefficiencies and performance degradation. This issue is particularly relevant when dealing with time series data.
+
+Time series data often involves frequent indexing of new data points and querying for recent or specific time ranges.
+
+---
+# Shard Overallocation
+
+
+- **Index Size vs. Shard Count**: Larger shards are recommended for static data to reduce overhead and make efficient use of cluster resources.
+- **Query Performance**: Fewer, larger shards can improve query performance, especially for querying recent or specific time ranges.
+- **Retention Period**: Consider using a smaller number of shards for recent data and gradually increasing the number of shards for older data based on its access frequency.
+- **Dynamic Indexing**: If you have a dynamic indexing rate, having more shards can distribute the workload and achieve higher indexing throughput.
+- **Cluster Resources**: Ensure sufficient disk space, memory, and CPU resources for your shard count and data volume. Monitor resource usage and adjust the shard count as needed to avoid resource contention.
+
+Remember to perform testing and benchmarking with representative data and workloads to determine the optimal shard count for your specific time series data and cluster setup.
+
+---
+# Scaling for Reads
+
+- Parallelization of search and retrieval operations across shards and nodes allows Elasticsearch to handle higher read loads and improve query performance.
+- Distributed search capabilities enable efficient searching across shards in parallel, aggregating results for faster response times.
+
+---
+# Scaling for Writes
+
+- Utilize the Elasticsearch _bulk API to index or update multiple documents in a single API call, reducing overhead and improving indexing throughput.
+- Elasticsearch automatically generates unique IDs for documents if not explicitly provided, simplifying indexing, especially for large data volumes.
+- Configure replica shards to improve fault tolerance and write scalability.
+- Replica shards distribute write operations across nodes, enabling higher write throughput and ensuring data durability and availability.
+  
+---
+
+
+class: center, middle
+
+# Distributed Search
+
+
+---
+# Distributed Search
+
+One of the reasons queries executed on Elasticsearch are so fast is because they are distributed. Multiple shards act as one index. A search query on an index is executed in parallel across all the shards.
+
+![node](img/distributed.png)
+
+---
+# Distributed Search
+
+
+The query is executed on S0 and S1 in parallel. The results are gathered back from both the shards and sent back to the client. Imagine, you have to query across million of documents, using Elasticsearch the search can be distributed. For the application I'm currently working on, a query on more than 100 million documents comes back within 50 millisecond
 
     </textarea>
     <script src="https://remarkjs.com/downloads/remark-latest.min.js">
